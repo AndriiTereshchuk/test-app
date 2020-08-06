@@ -1,0 +1,1 @@
+export const tokenAccess = '@token_Access';
