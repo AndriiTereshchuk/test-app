@@ -31,6 +31,9 @@ class DetailViewContainer extends React.Component<Props, State> {
   }
   state = {
     sepia: 0,
+    factor: 0,
+    negative: 0,
+    saturation: 1,
   }
 
   componentDidMount () {
@@ -58,12 +61,22 @@ class DetailViewContainer extends React.Component<Props, State> {
   }
 
   applyFilter = (type): void => {
-    this.setState(prev => ({sepia: +!prev.sepia}))
-    // TODO: implement apply image filter function
+    const s = {...this.state};
+    if (type === 'blur') {
+      s.factor = +!s.factor
+    } else if (type === 'sepia') {
+      s.sepia = +!s.sepia
+    } else if (type === 'negative') {
+      s.negative = +!s.negative
+    } else if (type === 'saturation') {
+      const currentSaturation = s.saturation === 1;
+      s.saturation = currentSaturation ? 2 : 1
+    }
+    this.setState(s);
   }
 
   render () {
-    const { sepia } = this.state;
+    const { sepia, saturation, factor, negative } = this.state;
     const { pictureDetails } = this.props.route.params
     const imageURL = pictureDetails.cropped_picture
     const { isLoading, hiResImage } = this.props
@@ -80,7 +93,11 @@ class DetailViewContainer extends React.Component<Props, State> {
               shareCallback={this.share}
               isLoading={isLoading}
               applyFilterCallback={this.applyFilter}
+
               sepia={sepia}
+              saturation={saturation}
+              factor={factor}
+              negative={negative}
           />
     )
   }

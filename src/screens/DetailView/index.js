@@ -2,18 +2,15 @@
 import * as React from 'react'
 import {
   View,
-  Image,
   ActivityIndicator,
     Dimensions
 } from 'react-native'
 import ImageZoom from 'react-native-image-pan-zoom';
-import {
-    Sepia,
-} from 'react-native-color-matrix-image-filters';
 
 import styles from './styles'
 import DetailsFooter from './components/DetailsFooter'
 import AuthorDetails from './components/AuthorDetails'
+import FilterImage from './components/FilterImage'
 
 type Props = {
   imageUrl: string,
@@ -23,16 +20,31 @@ type Props = {
   pictureDetails: Object,
   author: string,
   camera: string,
-  sepia: number
+  factor: number,
+  sepia: number,
+  negative: number,
+  saturation: number,
 }
 
 const { width, height } = Dimensions.get('window')
-
-// TODO: it would be great to see here loader, pinch to zoom here and pan
+const imageSize = width * 0.9;
 
 class DetailView extends React.PureComponent<Props> {
   render () {
-    const { imageUrl, isLoading, shareCallback, applyFilterCallback, pictureDetails, author, camera, sepia } = this.props
+    const {
+        imageUrl,
+        isLoading,
+        shareCallback,
+        applyFilterCallback,
+        pictureDetails,
+        author,
+        camera,
+        sepia,
+        factor,
+        negative,
+        saturation
+    } = this.props
+
     return (
       <View style={styles.container}>
           {
@@ -46,14 +58,19 @@ class DetailView extends React.PureComponent<Props> {
             <ImageZoom
                 cropWidth={width}
                 cropHeight={height}
-                imageWidth={width * 0.9}
-                imageHeight={width * 0.9}
+                imageWidth={imageSize}
+                imageHeight={imageSize}
             >
-                <Sepia amount={sepia} width={width * 0.9} height={width * 0.9}>
-                    <Image
-                        source={{uri: imageUrl}}
-                        style={styles.imageStyle} />
-                </Sepia>
+                <FilterImage
+                    key={imageUrl}
+                    imageUrl={imageUrl}
+                    width={imageSize}
+                    height={imageSize}
+                    factor={factor}
+                    sepia={sepia}
+                    negative={negative}
+                    saturation={saturation}
+                />
             </ImageZoom>
         </View>
         <AuthorDetails
