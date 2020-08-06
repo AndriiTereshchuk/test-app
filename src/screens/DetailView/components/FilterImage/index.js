@@ -26,9 +26,8 @@ const BlurImage = (props: Props) => {
         negative,
         saturation,
     } = props;
-    console.log(imageUrl, 'imageUrl')
     return(
-        <Surface style={{  width, height, }}>
+        <Surface key={imageUrl} style={{  width, height, }}>
             <Blur factor={factor}>
                 <Sepia sepia={sepia}>
                     <Negative factor={negative}>
